@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Family — মেস ম্যানেজমেন্ট</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #dc2626;
+            --success: #16a34a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 40px; }
+
+        .notice-banner { background-color: #dc2626; color: #ffffff; padding: 10px 0; overflow: hidden; white-space: nowrap; font-weight: 600; font-size: 14px; }
+        .marquee-content { display: inline-block; padding-left: 100%; animation: marqueeScroll 20s linear infinite; }
+        @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        header { background-color: var(--card); border-bottom: 1px solid var(--border); padding: 20px 16px; }
+        .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .brand h1 { font-size: 24px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .brand p { color: var(--muted); font-size: 14px; margin-top: 2px; }
+        .live-badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; background: #fef3c7; color: #92400e; font-weight: 600; }
+        .live-badge.connected { background: #dcfce7; color: #166534; }
+
+        .btn { padding: 9px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .btn-primary { background-color: var(--primary); color: #fff; }
+        .btn-success { background-color: var(--success); color: #fff; }
+        .btn-danger { background-color: var(--danger); color: #fff; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+        .admin-box { background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 18px; margin-bottom: 24px; display: none; }
+        .admin-box h3 { color: #92400e; font-size: 16px; margin-bottom: 10px; }
+        .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        input[type="text"], input[type="password"] { padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+
+        .section-card { background-color: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+        .section-title { font-size: 19px; color: var(--text); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+        .stat-card { background-color: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+        .stat-card .label { font-size: 13px; color: var(--muted); font-weight: 500; }
+        .stat-card .value { font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 4px; }
+
+        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; min-width: 680px; background: #fff; }
+        th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: center; font-size: 14px; }
+        th { background-color: #f1f5f9; color: #334155; font-weight: 700; }
+        td[contenteditable="true"] { background-color: #fefce8; cursor: text; }
+        .formula-note { margin-top: 12px; font-size: 13px; color: var(--muted); background: #f8fafc; padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--primary-light); }
+
+        .event-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+        .event-item { border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: #f8fafc; }
+        .event-item h4 { color: var(--primary); margin-bottom: 6px; font-size: 16px; }
+        .empty-state { text-align: center; color: var(--muted); padding: 20px; font-size: 14px; }
+        footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+        .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
+        .modal-card { background: #fff; width: 100%; max-width: 360px; border-radius: 10px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .modal-card h3 { margin-bottom: 6px; color: var(--primary); }
+        .modal-card p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+        .modal-card input { width: 100%; margin-bottom: 12px; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-actions button { flex: 1; }
+        .admin-only { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="notice-banner">
+        <div class="marquee-content" id="noticeTicker">📢 জরুরি নোটিশ: এই মাসের টাকা ১০ তারিখের মধ্যে জমা দিন।</div>
+    </div>
+
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <h1>Science Family <span class="live-badge" id="dbStatus">Connecting...</span></h1>
+                <p>মেস ম্যানেজমেন্ট সিস্টেম</p>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="adminBtn" onclick="handleAdminBtn()">অ্যাডমিন লগইন</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="admin-box" id="adminPanel">
+            <h3>অ্যাডমিন কন্ট্রোল প্যানেল (জরুরি নোটিশ আপডেট)</h3>
+            <div class="input-group">
+                <input type="text" id="noticeInput" style="flex: 1; min-width: 240px;" placeholder="নতুন নোটিশ লিখুন...">
+                <button class="btn btn-primary" onclick="updateNotice()">নোটিশ সেভ করুন</button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span>মাসিক হিসাব</span>
+                <div class="admin-only" style="gap: 8px;">
+                    <button class="btn btn-success btn-sm" onclick="addMember()">+ সদস্য যোগ করুন</button>
+                    <button class="btn btn-primary btn-sm" onclick="saveAllToFirebase()">হিসাব সেভ করুন</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><div class="label">মোট মিল</div><div class="value" id="statTotalMeal">0.0</div></div>
+                <div class="stat-card"><div class="label">মোট বাজার</div><div class="value" id="statTotalBazar">৳0</div></div>
+                <div class="stat-card"><div class="label">মোট জমা</div><div class="value" id="statTotalDeposit">৳0</div></div>
+                <div class="stat-card"><div class="label">মিল রেট</div><div class="value" id="statMealRate">৳0.00</div></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>সদস্যের নাম</th>
+                            <th>মোট মিল</th>
+                            <th>বাজার খরচ</th>
+                            <th>জমা</th>
+                            <th>মিল খরচ</th>
+                            <th>ব্যালেন্স</th>
+                            <th class="admin-only">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr><td colspan="7" class="empty-state">কোনো সদস্য নেই</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="formula-note">
+                মিল রেট = মোট বাজার ÷ মোট মিল। ব্যালেন্স = জমা − মিল খরচ। পাওনা = মেস থেকে ফেরত পাবেন, দেনা = মেসকে দিতে হবে।
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title"><span>ইভেন্ট ম্যানেজমেন্ট</span></div>
+            <div class="admin-only" id="eventFormBox" style="background: #f8fafc; padding: 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="evTitleInput" placeholder="ইভেন্টের নাম (যেমন: মেস পিকনিক)">
+                    <input type="text" id="evTaskInput" placeholder="কাজের বিবরণ (যেমন: বাজার করা)">
+                    <input type="text" id="evMemberInput" placeholder="দায়িত্বপ্রাপ্ত সদস্য">
+                </div>
+                <button class="btn btn-success btn-sm" onclick="addEvent()">+ ইভেন্ট টাস্ক যোগ করুন</button>
+            </div>
+            <div id="eventsContainer"><div class="empty-state">কোনো ইভেন্ট টাস্ক নেই</div></div>
+        </div>
+
+        <footer>© Science Family মেস</footer>
+    </div>
+
+    <div class="modal-backdrop" id="loginModal">
+        <div class="modal-card">
+            <h3>অ্যাডমিন লগইন</h3>
+            <p>মেসের হিসাব ও নোটিশ নিয়ন্ত্রণ করতে পাসওয়ার্ড দিন</p>
+            <input type="password" id="adminPassInput" placeholder="পাসওয়ার্ড লিখুন..." onkeydown="if(event.key==='Enter') verifyLogin()">
+            <div id="loginErrorMsg" style="color: #dc2626; font-size: 13px; margin-bottom: 10px; display: none;">ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</div>
